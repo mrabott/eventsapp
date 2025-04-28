@@ -1,0 +1,58 @@
+# .github/workflows/ci.yml
+---
+name: CI
+
+"on":
+  push:
+    branches: [main]      # <-- każde push do main
+  pull_request: {}        # <-- oraz każdy PR
+
+jobs:
+  python-ci:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+      cancel-in-progress: true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: poetry                # cache na podstawie backend/poetry.lock
+          cache-dependency-path: backend/poetry.lock
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1     # dodaje ~/.local/bin do PATH
+        with:
+          version: 1.8.2
+          virtualenvs-create: false
+
+      - name: Verify Poetry
+        run: |
+          which poetry
+          poetry --version
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          poetry install --no-root
+
+      - name: Run pre-commit hooks
+        run: |
+          cd backend
+          poetry run pre-commit run --all-files --show-diff-on-failure
+
+      - name: Run tests
+        run: |
+          cd backend
+          poetry run pytest -q --cov=./ --cov-report=xml
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: backend/coverage.xml
