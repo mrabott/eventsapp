@@ -41,7 +41,7 @@ jobs:
           POETRY_VIRTUALENVS_IN_PROJECT: "true"
         run: |
           cd backend
-          env use python
+          poetry env use python
           poetry install --no-root
 
       - name: Run pre-commit hooks
