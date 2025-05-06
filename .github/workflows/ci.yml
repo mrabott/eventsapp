@@ -28,7 +28,6 @@ jobs:
         uses: snok/install-poetry@v1     # dodaje ~/.local/bin do PATH
         with:
           version: 2.1.2
-            #          virtualenvs-create: false # domyślnie, jest true
 
       - name: Verify Poetry
         run: |
