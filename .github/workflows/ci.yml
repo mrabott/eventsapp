@@ -28,12 +28,15 @@ jobs:
         uses: snok/install-poetry@v1     # dodaje ~/.local/bin do PATH
         with:
           version: 2.1.2
-          virtualenvs-create: false
+            #          virtualenvs-create: false # domyślnie, jest true
 
       - name: Verify Poetry
         run: |
           which poetry
           poetry --version
+
+      - name: Show Poetry config on runner
+        run: poetry config --list | grep virtualenvs.create
 
       - name: Install dependencies
         env:
