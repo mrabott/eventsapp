@@ -6,6 +6,11 @@ authors = ["mrabott <ad@ksc.pl>"]
 readme = "README.md"
 #packages = [{ include = "portal_backend", from = "src" }]
 
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.7"
+pytest = "^8.1"
+pytest-cov = "^5.0"
+
 [tool.poetry.dependencies]
 python = ">=3.12,<3.13"
 django = "^5.0"
