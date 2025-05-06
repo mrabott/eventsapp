@@ -44,7 +44,7 @@ jobs:
         run: |
           cd backend
           poetry env use python
-          poetry install --no-root
+          poetry install --no-root --with dev
 
       - name: Run pre-commit hooks
         run: |
