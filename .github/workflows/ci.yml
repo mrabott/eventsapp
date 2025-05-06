@@ -17,13 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python 3.12
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: poetry                # cache na podstawie backend/poetry.lock
-          cache-dependency-path: backend/poetry.lock
-
       - name: Install Poetry
         uses: snok/install-poetry@v1     # dodaje ~/.local/bin do PATH
         with:
@@ -33,6 +26,13 @@ jobs:
         run: |
           which poetry
           poetry --version
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: poetry                # cache na podstawie backend/poetry.lock
+          cache-dependency-path: backend/poetry.lock
 
       - name: Show Poetry config on runner
         run: poetry config --list | grep virtualenvs.create
