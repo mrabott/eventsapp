@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  events-db:
+    image: postgres:16
+    ports: 
+      - "5434:5432"
+    env_file:
+      - .env
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eventsapp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  events-bknd:
+    build:
+      context: ./backend
+    env_file: .env
+    environment:
+      POSTGRES_HOST: events-db
+    depends_on:
+      events-db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"   # dev; w prod będzie gunicorn
+
+volumes:
+  db-data:
