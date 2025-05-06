@@ -20,8 +20,7 @@ jobs:
       - name: Install Poetry
         uses: snok/install-poetry@v1     # dodaje ~/.local/bin do PATH
         with:
-          version: 1.8.2
-          virtualenvs-create: false
+          version: 2.1.2
 
       - name: Verify Poetry
         run: |
@@ -35,9 +34,16 @@ jobs:
           cache: poetry                # cache na podstawie backend/poetry.lock
           cache-dependency-path: backend/poetry.lock
 
+      - name: Show Poetry config on runner
+        run: poetry config --list | grep virtualenvs.create
+
       - name: Install dependencies
+        env:
+          POETRY_VIRTUALENVS_CREATE: "true"
+          POETRY_VIRTUALENVS_IN_PROJECT: "true"
         run: |
           cd backend
+          poetry env use python
           poetry install --no-root
 
       - name: Run pre-commit hooks
